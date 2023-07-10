@@ -10,7 +10,7 @@ nombre:"",
 imagen:"",
 stock:0,
 precio:0,
-url:'http://promero.pythonanywhere.com/productos/'+id,
+url:'https://naiggo.pythonanywhere.com/productos/'+id,
 }
 },
 methods: {
