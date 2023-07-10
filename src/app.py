@@ -25,6 +25,18 @@ class Producto(db.Model):   # la clase Producto hereda de db.Model
         self.precio=precio
         self.stock=stock
         self.imagen=imagen
+        
+class Persona(db.Model):   # la clase Persona hereda de db.Model    
+    id=db.Column(db.Integer, primary_key=True)   #define los campos de la tabla
+    nombre=db.Column(db.String(100))
+    apellido=db.Column(db.String(100))
+    mail=db.Column(db.String(100))
+    fechaNacimiento=db.Column(db.String(100))
+    def __init__(self,nombre,apellido,mail,fechaNacimiento):
+        self.nombre=nombre
+        self.apellido=apellido
+        self.mail=mail
+        self.fechaNacimiento=fechaNacimiento
 
 
     #  si hay que crear mas tablas , se hace aqui
@@ -87,8 +99,71 @@ def update_producto(id):
 
     db.session.commit()
     return producto_schema.jsonify(producto)
+
+
+
+
+class PersonaSchema(ma.Schema):
+    class Meta:
+        fields=('id','nombre','apellido','mail','fecha_nacimiento')
+
+
+persona_schema=PersonaSchema()           
+personas_schema=PersonaSchema(many=True)
+
+
+# crea los endpoint o rutas (json)
+@app.route('/personas',methods=['GET'])
+def get_Personas():
+    all_personas=Persona.query.all()         
+    result=personas_schema.dump(all_personas)  
+                                               
+    return jsonify(result)                      
+
+
+@app.route('/personas/<id>',methods=['GET'])
+def get_persona(id):
+    persona=Persona.query.get(id)
+    return persona_schema.jsonify(persona)
+
+
+@app.route('/personas/<id>',methods=['DELETE'])
+def delete_persona(id):
+    persona=Persona.query.get(id)
+    db.session.delete(persona)
+    db.session.commit()
+    return persona_schema.jsonify(persona)
+
+@app.route('/personas', methods=['POST'])
+def create_persona():
+    nombre=request.json['nombre']
+    apellido=request.json['apellido']
+    mail=request.json['mail']
+    fechaNacimiento=request.json['fecha_nacimiento']
+    new_persona=Persona(nombre,apellido,mail,fechaNacimiento)
+    db.session.add(new_persona)
+    db.session.commit()
+    return persona_schema.jsonify(new_persona)
+
+@app.route('/personas/<id>' ,methods=['PUT'])
+def update_persona(id):
+    persona=Persona.query.get(id)
+ 
+    persona.nombre=request.json['nombre']
+    persona.apellido=request.json['apellido']
+    persona.mail=request.json['mail']
+    persona.fechaNacimiento=request.json['fecha_nacimiento']
+
+    db.session.commit()
+    return persona_schema.jsonify(persona)
  
 
 # programa principal *******************************
-if __name__=='__main__':  
+if __name__=='__main__':
     app.run(debug=True, port=5000)    # ejecuta el servidor Flask en el puerto 5000
+
+
+# A very simple Flask Hello World app for you to get started with...
+@app.route('/')
+def hello_world():
+    return 'Hello from Flask!'
