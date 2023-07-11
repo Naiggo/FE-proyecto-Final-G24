@@ -48,7 +48,7 @@ redirect: 'follow'
 fetch(this.url, options)
 .then(function () {
 alert("Registro modificado")
-window.location.href = "./FE-proyecto-Final-G24/personas.html";
+window.location.href = "./personas.html";
 })
 .catch(err => {
 console.error(err);
