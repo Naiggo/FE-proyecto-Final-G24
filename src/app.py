@@ -46,7 +46,7 @@ class Persona(db.Model):   # la clase Persona hereda de db.Model
         
     def calcular_dias_para_cumple(self):
         fecha_actual = datetime.now()
-        fecha_cumple = datetime.strptime(self.fecha_nacimiento, "%d-%m-%Y")
+        fecha_cumple = datetime.strptime(self.fecha_nacimiento, "%Y-%m-%d")
         fecha_cumple = fecha_cumple.replace(year=fecha_actual.year)
 
         if fecha_actual > fecha_cumple:
@@ -170,9 +170,17 @@ def update_persona(id):
     persona.mail=request.json['mail']
     persona.fecha_nacimiento=request.json['fecha_nacimiento']
     persona.dias_restantes=persona.calcular_dias_para_cumple()
-
+    
     db.session.commit()
     return persona_schema.jsonify(persona) 
+
+@app.route('/personas/proxcumple',methods=['GET'])
+def get_Personas_prox_cumple():
+    personas_proximas=Persona.query.with_entities(db.func.min(Persona.dias_restantes)).scalar()     
+    query = Persona.query.filter(Persona.dias_restantes == personas_proximas).all()
+    result = personas_schema.dump(query)
+                                               
+    return jsonify(result)   
 
 # programa principal *******************************
 if __name__=='__main__':
