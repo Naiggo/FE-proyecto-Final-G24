@@ -11,7 +11,7 @@ apellido:"",
 mail:"",
 fecha_nacimiento:"",
 dias_restantes:0,
-url:'https://naiggo.pythonanywhere.com/personas/'+id,
+url:'https://naiggo.pythonanywhere.com/personas/'+id+'/',
 }
 },
 methods: {
