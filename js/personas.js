@@ -60,7 +60,7 @@ redirect: 'follow'
 fetch(this.url, options)
 .then(function () {
 alert("Registro grabado")
-window.location.href = "./personas.html";
+window.location.href = "../personas.html";
 })
 .catch(err => {
 console.error(err);
