@@ -31,12 +31,12 @@ class Persona(db.Model):   # la clase Persona hereda de db.Model
     nombre=db.Column(db.String(100))
     apellido=db.Column(db.String(100))
     mail=db.Column(db.String(100))
-    fechaNacimiento=db.Column(db.String(100))
-    def __init__(self,nombre,apellido,mail,fechaNacimiento):
+    fecha_nacimiento=db.Column(db.String(100))
+    def __init__(self,nombre,apellido,mail,fecha_nacimiento):
         self.nombre=nombre
         self.apellido=apellido
         self.mail=mail
-        self.fechaNacimiento=fechaNacimiento
+        self.fecha_nacimiento=fecha_nacimiento
 
 
     #  si hay que crear mas tablas , se hace aqui
@@ -139,8 +139,8 @@ def create_persona():
     nombre=request.json['nombre']
     apellido=request.json['apellido']
     mail=request.json['mail']
-    fechaNacimiento=request.json['fecha_nacimiento']
-    new_persona=Persona(nombre,apellido,mail,fechaNacimiento)
+    fecha_nacimiento=request.json['fecha_nacimiento']
+    new_persona=Persona(nombre,apellido,mail,fecha_nacimiento)
     db.session.add(new_persona)
     db.session.commit()
     return persona_schema.jsonify(new_persona)
@@ -152,7 +152,7 @@ def update_persona(id):
     persona.nombre=request.json['nombre']
     persona.apellido=request.json['apellido']
     persona.mail=request.json['mail']
-    persona.fechaNacimiento=request.json['fecha_nacimiento']
+    persona.fecha_nacimiento=request.json['fecha_nacimiento']
 
     db.session.commit()
     return persona_schema.jsonify(persona)

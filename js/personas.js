@@ -13,7 +13,7 @@ id:0,
 nombre:"",
 apellido:"",
 mail:"",
-fechaNacimiento:"",
+fecha_nacimiento:"",
 }
 },
 methods: {
@@ -45,8 +45,12 @@ let persona = {
 nombre:this.nombre,
 apellido: this.apellido,
 mail: this.mail,
-fechaNacimiento:this.fechaNacimiento
+fecha_nacimiento:convertirFecha(this.fecha_nacimiento)
 }
+
+console.log(persona)
+
+
 var options = {
 body:JSON.stringify(persona),
 method: 'POST',
@@ -68,3 +72,14 @@ created() {
 this.fetchData(this.url)
 },
 }).mount('#app')
+
+function convertirFecha(fecha) {
+    let fechaNueva = new Date(fecha);
+    let dia = fechaNueva.getDate();
+    let mes = fechaNueva.getMonth() + 1; // Los meses en JavaScript son base 0, por lo que se suma 1
+    let anio = fechaNueva.getFullYear();
+  
+    let fechaString = (dia < 10 ? "0" + dia : dia) + (mes < 10 ? "0" + mes : mes) + anio;
+  
+    return fechaString;
+  }

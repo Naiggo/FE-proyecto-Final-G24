@@ -9,7 +9,7 @@ id:0,
 nombre:"",
 apellido:"",
 mail:"",
-fechaNacimiento:"",
+fecha_nacimiento:"",
 url:'https://naiggo.pythonanywhere.com/personas/'+id,
 }
 },
@@ -24,7 +24,7 @@ this.id=data.id
 this.nombre = data.nombre;
 this.apellido=data.apellido
 this.mail=data.mail
-this.fechaNacimiento=data.fechaNacimiento
+this.fecha_nacimiento=data.fecha_nacimiento
 })
 .catch(err => {
 console.error(err);
@@ -36,7 +36,7 @@ let persona = {
 nombre:this.nombre,
 apellido: this.apellido,
 mail: this.mail,
-fechaNacimiento:this.fechaNacimiento
+fecha_nacimiento:this.fecha_nacimiento
 }
 var options = {
 body: JSON.stringify(persona),
