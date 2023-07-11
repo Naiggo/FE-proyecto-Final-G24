@@ -36,6 +36,7 @@ crossorigin="anonymous">
 <th scope="col">Apellido</th>
 <th scope="col">Mail</th>
 <th scope="col">Fecha de Nacimiento</th>
+<th scope="col">Dias para cumpleaños</th>
 </tr>
 </thead>
 <tbody>
@@ -45,6 +46,7 @@ crossorigin="anonymous">
 <td>{{persona.apellido}}</td>
 <td>{{persona.mail}}</td>
 <td>{{persona.fecha_nacimiento}}</td>
+<td>{{persona.dias_restantes}}</td>
 <td>
 <a class="btn btn-primary" :href="'./persona_update.html?id='+ persona.id" >Editar</a>
 <button type="button" class="btn btn-danger" v-on:click="eliminar(persona.id)" >Eliminar</button>

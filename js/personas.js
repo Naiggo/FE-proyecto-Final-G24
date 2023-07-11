@@ -79,7 +79,7 @@ function convertirFecha(fecha) {
     let mes = fechaNueva.getMonth() + 1; // Los meses en JavaScript son base 0, por lo que se suma 1
     let anio = fechaNueva.getFullYear();
   
-    let fechaString = (dia < 10 ? "0" + dia : dia) + (mes < 10 ? "0" + mes : mes) + anio;
+    let fechaString = (dia < 10 ? "0" + dia : dia) + "-" + (mes < 10 ? "0" + mes : mes) + "-" + anio;
   
     return fechaString;
   }

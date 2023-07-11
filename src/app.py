@@ -3,11 +3,14 @@ from flask import Flask ,jsonify ,request
 from flask_cors import CORS       # del modulo flask_cors importar CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from datetime import datetime
+import schedule
+import time
 app=Flask(__name__)  # crear el objeto app de la clase Flask
 CORS(app) #modulo cors es para que me permita acceder desde el frontend al backend
 
 # configuro la base de datos, con el nombre el usuario y la clave
-app.config['SQLALCHEMY_DATABASE_URI']='mysql+pymysql://root:Oracle_4@localhost/proyecto'
+app.config['SQLALCHEMY_DATABASE_URI']='mysql+pymysql://naiggo:mysql123@naiggo.mysql.pythonanywhere-services.com/naiggo$default'
 # URI de la BBDD                          driver de la BD  user:clave@URLBBDD/nombreBBDD
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False #none
 db= SQLAlchemy(app)   #crea el objeto db de la clase SQLAlquemy
@@ -32,14 +35,27 @@ class Persona(db.Model):   # la clase Persona hereda de db.Model
     apellido=db.Column(db.String(100))
     mail=db.Column(db.String(100))
     fecha_nacimiento=db.Column(db.String(100))
+    dias_restantes=db.Column(db.Integer)
+    
     def __init__(self,nombre,apellido,mail,fecha_nacimiento):
         self.nombre=nombre
         self.apellido=apellido
         self.mail=mail
         self.fecha_nacimiento=fecha_nacimiento
+        self.dias_restantes=self.calcular_dias_para_cumple()
+        
+    def calcular_dias_para_cumple(self):
+        fecha_actual = datetime.now()
+        fecha_cumple = datetime.strptime(self.fecha_nacimiento, "%d-%m-%Y")
+        fecha_cumple = fecha_cumple.replace(year=fecha_actual.year)
 
+        if fecha_actual > fecha_cumple:
+            fecha_cumple = fecha_cumple.replace(year=fecha_actual.year + 1)
 
-    #  si hay que crear mas tablas , se hace aqui
+        dias_restantes = (fecha_cumple - fecha_actual).days
+        return dias_restantes
+
+#  si hay que crear mas tablas , se hace aqui
 
 
 with app.app_context():
@@ -105,7 +121,7 @@ def update_producto(id):
 
 class PersonaSchema(ma.Schema):
     class Meta:
-        fields=('id','nombre','apellido','mail','fecha_nacimiento')
+        fields=('id','nombre','apellido','mail','fecha_nacimiento', 'dias_restantes')
 
 
 persona_schema=PersonaSchema()           
@@ -153,14 +169,37 @@ def update_persona(id):
     persona.apellido=request.json['apellido']
     persona.mail=request.json['mail']
     persona.fecha_nacimiento=request.json['fecha_nacimiento']
+    persona.dias_restantes=persona.calcular_dias_para_cumple()
 
     db.session.commit()
-    return persona_schema.jsonify(persona)
- 
+    return persona_schema.jsonify(persona) 
 
 # programa principal *******************************
 if __name__=='__main__':
-    app.run(debug=True, port=5000)    # ejecuta el servidor Flask en el puerto 5000
+    app.run(debug=True, port=6000)    # ejecuta el servidor Flask en el puerto 5000
+     
+    
+    def actualizar_dias_restantes():
+        fecha_actual = datetime.now().date()
+        personas = Persona.query.all()
+
+        for persona in personas:
+            fecha_cumple = datetime.strptime(persona.fecha_nacimiento, "%d-%m-%Y").date()
+            fecha_cumple = fecha_cumple.replace(year=fecha_actual.year)
+
+            if fecha_actual > fecha_cumple:
+                fecha_cumple = fecha_cumple.replace(year=fecha_actual.year + 1)
+
+            dias_restantes = (fecha_cumple - fecha_actual).days
+            persona.dias_restantes = dias_restantes
+
+        db.session.commit()
+
+    schedule.every().day.at("00:00").do(actualizar_dias_restantes)
+
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
 
 
 # A very simple Flask Hello World app for you to get started with...
