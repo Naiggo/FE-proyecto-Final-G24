@@ -75,11 +75,11 @@ this.fetchData(this.url)
 
 function convertirFecha(fecha) {
     let fechaNueva = new Date(fecha);
-    let dia = fechaNueva.getDate();
+    let dia = fechaNueva.getDate() + 1;
     let mes = fechaNueva.getMonth() + 1; // Los meses en JavaScript son base 0, por lo que se suma 1
     let anio = fechaNueva.getFullYear();
   
-    let fechaString = anio + "-" + (mes < 10 ? "0" + mes : mes) + "-" + (1+(dia < 10 ? "0" + dia : dia));
+    let fechaString = anio + "-" + (mes < 10 ? "0" + mes : mes) + "-" + ((dia < 10 ? "0" + dia : dia));
   
     return fechaString;
-  }
+}
